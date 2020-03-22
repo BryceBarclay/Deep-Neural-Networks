@@ -17,7 +17,9 @@ nltk.data.path.append("/DNN_HW3/nltk_data")
 myText_tokenized = nltk.word_tokenize(myText) 
 # print(myText_tokenized[0:10]) # check if properly tokenized
 print("The total number of words N in the text : ",len(myText_tokenized))
-
+myUnigram = nltk.ngrams(myText_tokenized, 1) 
+fdist_uni = nltk.FreqDist(myUnigram) 
+print("The total number of unique words in the text : ",len(fdist_uni))
 
 # (b)
 
