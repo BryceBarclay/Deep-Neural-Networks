@@ -15,7 +15,8 @@ import nltk
 # nltk.download('punkt')
 nltk.data.path.append("/DNN_HW3/nltk_data") 
 myText_tokenized = nltk.word_tokenize(myText) 
-# print(myText_tokenized[0:10]) # check if properly tokenized
+# 
+print(myText_tokenized[0:10]) # check if properly tokenized
 print("The total number of words N in the text : ",len(myText_tokenized))
 myUnigram = nltk.ngrams(myText_tokenized, 1) 
 fdist_uni = nltk.FreqDist(myUnigram) 
@@ -56,9 +57,10 @@ def prob(x_1,x_2):
 N = len(myText_tokenized)
 PP = 0
 for i in range(0,N-1):
-    if(prob(myText_tokenized[i+1],myText_tokenized[i]) > 0):
-        PP = PP + np.log(prob(myText_tokenized[i+1],myText_tokenized[i]))
+    #if(prob(myText_tokenized[i],myText_tokenized[i+1]) > 0):
+    PP = PP + np.log(prob(myText_tokenized[i],myText_tokenized[i+1]))
 PP = PP*(-1/(N-1))
 PP = np.exp(PP)
 
 print('The perplexity is: ', PP)
+

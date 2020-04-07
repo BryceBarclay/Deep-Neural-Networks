@@ -68,6 +68,7 @@ for i in range(0,30): # i = 0:29
     hpt = torch.mm(R,h) + torch.mm(A,x)
     h = tanh(hpt)
     y_tensor = torch.mm(B,h)
+    x = torch.FloatTensor([[0],[0]])
 
 # predicted tensor:
 print('Predicted y for part (c): ')
