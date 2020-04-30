@@ -1,0 +1,12 @@
+{
+  "data_to_read": "../dataset/AMZN.csv",
+  "model": "LSTM_RNN",
+  "hidden_size": 10,
+  "n_steps": 2001,
+  "lr": 0.005,
+  "sequence_len": 100,
+  "print_every": 200,
+  "compute_perplexity_every": 1000,
+  "folder_result": "../results",
+  "time_training": "0m 48s"
+}
