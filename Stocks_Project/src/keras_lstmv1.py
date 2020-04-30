@@ -4,7 +4,7 @@ import tensorflow as tf
 from tensorflow import keras
 
 path = (
-    "/Users/socket778/Coding/APM598project/Deep-Neural-Networks/Stocks_Project/dataset/"
+    "/Users/Bryce/Desktop/Deep_net/Deep-Neural-Networks/Stocks_Project/dataset/"
 )
 filename = "data.hdf5"
 
@@ -18,7 +18,7 @@ test_labels = g["labels_test"][:]
 
 # setup model
 model = keras.Sequential(
-    [keras.layers.LSTM(16), keras.layers.Dense(1, activation=tf.nn.sigmoid),]
+    [keras.layers.GRU(16), keras.layers.Dense(1, activation=tf.nn.sigmoid),]
 )
 
 model.compile(

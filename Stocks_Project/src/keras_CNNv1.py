@@ -4,7 +4,7 @@ import tensorflow as tf
 from tensorflow import keras
 
 path = (
-    "/Users/socket778/Coding/APM598project/Deep-Neural-Networks/Stocks_Project/dataset/"
+    "/Users/Bryce/Desktop/Deep_net/Deep-Neural-Networks/Stocks_Project/dataset/"
 )
 filename = "data.hdf5"
 
@@ -38,7 +38,7 @@ print(train_labels.shape)
 # train model
 print(np.sum(train_labels) / train_labels.shape[0])
 print(np.sum(test_labels) / test_labels.shape[0])
-model.fit(train_input, train_labels, epochs=150, batch_size=32)
+model.fit(train_input, train_labels, epochs=50, batch_size=32)
 print(np.sum(train_labels) / train_labels.shape[0])
 
 # evaluate

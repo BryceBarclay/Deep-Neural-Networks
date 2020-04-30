@@ -6,9 +6,15 @@ import pandas as pd
 import h5py
 
 path = (
-    "/Users/socket778/Coding/APM598project/Deep-Neural-Networks/Stocks_Project/dataset/"
+    "/Users/Bryce/Desktop/Deep_net/Deep-Neural-Networks/Stocks_Project/dataset/"
 )
-files = ["SBER_170605_190531.csv", "SBER_190603_190927.csv"]
+files = ["SBER_170605_190531.csv", 
+         "SBER_190603_190927.csv",] 
+         #"AFLT_170605_190531.csv",
+         #"GAZP_170605_190531.csv",
+         #"HYDR_170605_190531.csv",
+         #"LKOH_170605_190531.csv",
+         #"PLZL_170605_190531.csv"]
 # files = ["train_short.csv", "test_short.csv"]
 filename = "data.hdf5"
 f = h5py.File(path + filename, "w")
@@ -92,9 +98,13 @@ for filein in files:
     if test_flag == 0:
         dset = f.create_dataset("inputs", data=inputs)
         dset = f.create_dataset("labels", data=labels)
+        #dset = f.require_dataset("inputs", data=inputs)
+        #dset = f.require_dataset("labels", data=labels)
     else:
         dset = f.create_dataset("inputs_test", data=inputs)
         dset = f.create_dataset("labels_test", data=labels)
+        #dset = f.require_dataset("inputs_test", data=inputs)
+        #dset = f.require_dataset("labels_test", data=labels)
     print(sum(labels) / labels.shape[0])
     test_flag = 1
 
