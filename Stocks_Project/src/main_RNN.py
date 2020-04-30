@@ -18,13 +18,10 @@ import os, time, datetime, json
 #-------------------------------------------------#
 hyperP = {
     'data_to_read': '../dataset/data.hdf5',
-    'model': 'keras.layers.LSTM',  # 'LSTM', 'GRU' 
-    'hidden_size': 40,
+    'model': 'CNN', #'keras.layers.LSTM',  # 'LSTM', 'GRU', 'CNN'
+    'units': 40,
     'lr' : .005,
-    'sequence_len' : 100,   # x_1 x_2 ... x_100
-    'epochs' : 25,
-    #'print_every' : 200,
-    #'compute_perplexity_every' : 1000,
+    'epochs' : 1,
     'folder_result': '../results'
 }
 
@@ -38,9 +35,23 @@ train_labels = g["labels"][:]
 test_input = g["inputs_test"][:]
 test_labels = g["labels_test"][:]
 # setup model
-model = keras.Sequential(
-    [eval(hyperP['model'])(16), keras.layers.Dense(1, activation=tf.nn.sigmoid),]
-)
+if(hyperP['model'] == 'CNN'):
+    model = keras.Sequential(
+    [
+        keras.layers.Conv1D(
+            8, 4, strides=2, padding="valid", activation="relu", input_shape=(20, 4)
+        ),
+        keras.layers.Conv1D(16, 4, strides=1, padding="valid", activation="relu"),
+        keras.layers.Conv1D(32, 3, strides=1, padding="valid", activation="relu"),
+        keras.layers.Flatten(input_shape=(4, 32)),
+        keras.layers.Dense(1, activation=tf.nn.sigmoid),
+    ]
+    )
+else:
+    model = keras.Sequential(
+        [eval(hyperP['model'])(hyperP['units']), keras.layers.Dense(1, activation=tf.nn.sigmoid),]
+    )
+
 optim = keras.optimizers.Adam(lr = hyperP['lr'])
 model.compile(
     optimizer=optim, loss="binary_crossentropy", metrics=["accuracy"]
@@ -64,7 +75,7 @@ train_history = model.fit(train_input, train_labels, epochs=hyperP['epochs'], ba
 #-------------------------------------------------#
 time_elapsed = time.time() - t0
 print(' Total time (s) : '+str(time_elapsed))
-# D.1) evolution loss/pexplexity 
+# D.1) evolution of loss
 loss = train_history.history['loss']
 plt.figure(1);plt.clf()
 plt.plot(loss,'-o',alpha=.2,label='loss')
@@ -83,6 +94,9 @@ with open(nameFolder+'/architecture.json','w') as jsonFile:
 # evaluate on test
 test_loss, test_acc = model.evaluate(test_input, test_labels)
 print("test accuracy: ", test_acc)
+
+with open(nameFolder+'/training.csv','a') as fd:
+    fd.write('Test: ,' + str(test_acc))
 
 print(model.summary())
 
