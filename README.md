@@ -36,3 +36,12 @@ For the project we thought it would be interesting to compare different kinds of
 2. A variation of RNN (and maybe separately LSTM)
 3. A variation of CNN
 4. Autoencoder (if we have time)
+
+## Organization of Code
+The code is organized so that modifications can be made for the Keras version of the project as follows:
+
+1. to add/modify data or change problem parameters modify data_prep.py script
+2. to add/modify models (CNN, GRU, LSTM, MLP) modify keras_models.py in utils
+3. to modify hyperparameters modify main_keras.py script.
+
+The results of a given run (the hyperparameters, train and test loss) will be saved into a file in the results folder with a time stamp of the run. 
