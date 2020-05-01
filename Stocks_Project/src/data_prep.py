@@ -1,3 +1,4 @@
+# Primary file
 # Set up data files and problem parameters
 
 # this script reformats the data obtained from finam.ru (changes csv from a single entry to a table-like)

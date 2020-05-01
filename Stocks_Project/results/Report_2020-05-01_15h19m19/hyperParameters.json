@@ -1,0 +1,8 @@
+{
+  "data_to_read": "../dataset/data.hdf5",
+  "model": "GRU_model",
+  "units": 40,
+  "lr": 0.005,
+  "epochs": 1,
+  "folder_result": "../results"
+}

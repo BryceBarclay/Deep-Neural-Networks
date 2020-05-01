@@ -1,4 +1,4 @@
-# Primary file
+# version witout using utils.keras_models
 # Trining, testing, and saving results of keras models including CNN, LSTM, GRU
 
 import h5py
@@ -14,24 +14,20 @@ from matplotlib import rc
 import random, string
 import os, time, datetime, json
 
-# personal libraries
-from utils.toolbox import *
-from utils.keras_models import *
-
 #-------------------------------------------------#
 #               A) Hyper-parameters               #
 #-------------------------------------------------#
 hyperP = {
     'data_to_read': '../dataset/data.hdf5',
-    'model': 'GRU',  # 'LSTM', 'GRU', 'CNN', 'SimpleMLP'
-    'units': 40, # RNN only
+    'model': 'LSTM',  # 'LSTM', 'GRU', 'CNN'
+    'units': 40, # RNN
     'lr' : .005,
     'epochs' : 1,
     'folder_result': '../results'
 }
-# use utils.keras_models classes:
-hyperP['model'] = hyperP['model'] + '_model'
-
+# to use eval for RNN:
+if(hyperP['model'] != 'CNN'):
+    hyperP['model'] = 'keras.layers.' + hyperP['model']
 #-------------------------------------------------#
 #               B) Data/Model/loss                #
 #-------------------------------------------------#
@@ -41,15 +37,24 @@ train_input = g["inputs"][:]
 train_labels = g["labels"][:]
 test_input = g["inputs_test"][:]
 test_labels = g["labels_test"][:]
-# setup model using utils.keras_models
-RNN = False
-if((hyperP['model'] == 'GRU') | (hyperP['model'] == 'LSTM')):
-    RNN = True
-if(RNN):
-    model = eval(hyperP['model'])(hyperP['units'])
+# setup model
+if(hyperP['model'] == 'CNN'):
+    model = keras.Sequential(
+    [
+        keras.layers.Conv1D(
+            8, 4, strides=2, padding="valid", activation="relu", input_shape=(20, 4)
+        ),
+        keras.layers.Conv1D(16, 4, strides=1, padding="valid", activation="relu"),
+        keras.layers.Conv1D(32, 3, strides=1, padding="valid", activation="relu"),
+        keras.layers.Flatten(input_shape=(4, 32)),
+        keras.layers.Dense(1, activation=tf.nn.sigmoid),
+    ]
+    )
 else:
-    model = eval(hyperP['model'])()
-# optimizer and compile
+    model = keras.Sequential(
+        [eval(hyperP['model'])(hyperP['units']), keras.layers.Dense(1, activation=tf.nn.sigmoid),]
+    )
+
 optim = keras.optimizers.Adam(lr = hyperP['lr'])
 model.compile(
     optimizer=optim, loss="binary_crossentropy", metrics=["accuracy"]
@@ -83,9 +88,12 @@ plt.legend()
 plt.title('loss for the model '+hyperP['model'].replace('_',' '))
 plt.savefig(nameFolder+'/evolution_loss_perplexity.pdf', bbox_inches='tight', pad_inches=0)
 
-# D.2) saving parameters 
+# D.2) saving parameters and architecture: 
 with open(nameFolder+'/hyperParameters.json','w') as jsonFile:
     json.dump(hyperP, jsonFile, indent=2)
+json_string = model.to_json()
+with open(nameFolder+'/architecture.json','w') as jsonFile:
+    json.dump(json_string, jsonFile, indent=2)
 
 # evaluate on test
 test_loss, test_acc = model.evaluate(test_input, test_labels)
