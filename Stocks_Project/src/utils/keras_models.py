@@ -22,7 +22,7 @@ class CNN_model(keras.Model):
 
 class SimpleMLP_model(keras.Model):
 
-    def __init__(self, use_bn=False, use_dp=False, num_classes=1):
+    def __init__(self, use_bn=False, use_dp=True, num_classes=1):
         super(SimpleMLP_model, self).__init__(name='mlp')
         self.use_bn = use_bn
         self.use_dp = use_dp
@@ -49,11 +49,13 @@ class LSTM_model(keras.Model):
     def __init__(self, units = 20):
         super(LSTM_model,self).__init__(name='lstm')
         self.units = units
-        self.LSTM1 = keras.layers.LSTM(units)
+        self.LSTM1 = keras.layers.LSTM(units, return_sequences=True)
+        self.LSTM2 = keras.layers.LSTM(20)
         self.dense1 = keras.layers.Dense(1, activation=tf.nn.sigmoid)
 
     def call(self, inputs):
         x = self.LSTM1(inputs)
+        x = self.LSTM2(x)
         return self.dense1(x)
 
 

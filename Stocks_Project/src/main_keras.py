@@ -23,10 +23,10 @@ from utils.keras_models import *
 #-------------------------------------------------#
 hyperP = {
     'data_to_read': '../dataset/data.hdf5',
-    'model': 'GRU',  # 'LSTM', 'GRU', 'CNN', 'SimpleMLP'
+    'model': 'LSTM',  # 'LSTM', 'GRU', 'CNN', 'SimpleMLP'
     'units': 40, # RNN only
     'lr' : .005,
-    'epochs' : 1,
+    'epochs' : 15,
     'folder_result': '../results'
 }
 # use utils.keras_models classes:
@@ -41,6 +41,7 @@ train_input = g["inputs"][:]
 train_labels = g["labels"][:]
 test_input = g["inputs_test"][:]
 test_labels = g["labels_test"][:]
+print(test_labels.shape)
 # setup model using utils.keras_models
 RNN = False
 if((hyperP['model'] == 'GRU') | (hyperP['model'] == 'LSTM')):

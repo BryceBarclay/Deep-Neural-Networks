@@ -47,6 +47,8 @@ for filein in files:
         csv_reader = csv.reader(csv_file, delimiter=";")
         cnt = 0
         for row in csv_reader:
+
+            #print(row)
             line = np.array(
                 (
                     [
