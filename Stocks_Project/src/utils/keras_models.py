@@ -50,12 +50,12 @@ class LSTM_model(keras.Model):
         super(LSTM_model,self).__init__(name='lstm')
         self.units = units
         self.LSTM1 = keras.layers.LSTM(units, return_sequences=True)
-        self.LSTM2 = keras.layers.LSTM(20)
+        #self.LSTM2 = keras.layers.LSTM(20)
         self.dense1 = keras.layers.Dense(1, activation=tf.nn.sigmoid)
 
     def call(self, inputs):
         x = self.LSTM1(inputs)
-        x = self.LSTM2(x)
+        #x = self.LSTM2(x)
         return self.dense1(x)
 
 

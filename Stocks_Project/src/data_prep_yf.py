@@ -25,10 +25,14 @@ probP = {
 path = (
     "../dataset/"
 )
-files = ["AMZN_header.csv",
-         "AAPL_header.csv",
+files = ["AMZN.csv",
+         "AAPL.csv",
          "FANG.csv",
-         "MSFT.csv",]
+         "MSFT.csv",
+         "DIS.csv",
+         "CI.csv",
+         "TM.csv",
+         "NFLX.csv",]
 # files = ["train_short.csv", "test_short.csv"]
 filename = "data.hdf5"
 f = h5py.File(path + filename, "w")
@@ -38,6 +42,10 @@ f = h5py.File(path + filename, "w")
 #-------------------------------------------------#
 test_flag = 1
 cnt=0
+
+inputs = np.zeros((1, probP['nbars_pred'], 4))
+labels = np.zeros((1, 1))  
+
 for filein in files:
     print("new file")
     prices = np.empty((1, 1, 4))
@@ -45,11 +53,8 @@ for filein in files:
         #csv_reader = csv.reader(csv_file, delimiter=";")
         csv_reader = pd.read_csv(csv_file, delimiter=",")
     
-        #cnt = -1
         for row in csv_reader.iterrows(): #range(len(csv_reader)): #csv_reader:
             cnt = cnt + 1 
-            #print(cnt)
-            #if(cnt != -2):
             row = row[1]
             line = np.array(
                 (
@@ -66,12 +71,7 @@ for filein in files:
             prices = np.append(prices, line, axis=1)
 
     prices = np.delete(prices, 0, 1)
-    # print(prices[0])
 
-    # print(prices.shape)
-
-    inputs = np.zeros((1, probP['nbars_pred'], 4))
-    labels = np.zeros((1, 1))  # []
     # print(int(np.floor(prices.shape[1] - probP['nbars_pred'] - probP['nbars_crit'])))
     for i in range(0, int(np.floor(prices.shape[1] - probP['nbars_pred'] - probP['nbars_crit']))):
 
@@ -101,20 +101,28 @@ for filein in files:
 
     # print(inputs.shape)
     # print(labels.shape)
-    if test_flag == 0:
+    #if test_flag == 0:
+        #print('train')
         #dset = f.create_dataset("inputs", data=inputs)
         #dset = f.create_dataset("labels", data=labels)
-        dset = f.require_dataset("inputs", data=inputs, shape=inputs.shape, dtype='float64')
-        dset = f.require_dataset("labels", data=labels, shape=labels.shape, dtype='float64')
-    else:
+        #dset = f.require_dataset("inputs", data=inputs, shape=inputs.shape, dtype='float64')
+        #dset = f.require_dataset("labels", data=labels, shape=labels.shape, dtype='float64')
+    #else:
+
+    if test_flag == 1: 
+        print('test')
         #dset = f.create_dataset("inputs_test", data=inputs)
         #dset = f.create_dataset("labels_test", data=labels)
         dset = f.require_dataset("inputs_test", data=inputs, shape=inputs.shape, dtype='float64')
         dset = f.require_dataset("labels_test", data=labels, shape=labels.shape, dtype='float64')
+        inputs = np.zeros((1, probP['nbars_pred'], 4))
+        labels = np.zeros((1, 1)) 
     print(sum(labels) / labels.shape[0])
+    print(inputs.shape)
     test_flag = 0
 
-
+dset = f.require_dataset("inputs", data=inputs, shape=inputs.shape, dtype='float64')
+dset = f.require_dataset("labels", data=labels, shape=labels.shape, dtype='float64')
 g = h5py.File(path + filename, "r")
 #print(g.keys())
 # inputs = g["inputs"][:]

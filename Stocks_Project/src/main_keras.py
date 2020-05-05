@@ -26,7 +26,7 @@ hyperP = {
     'model': 'LSTM',  # 'LSTM', 'GRU', 'CNN', 'SimpleMLP'
     'units': 40, # RNN only
     'lr' : .005,
-    'epochs' : 15,
+    'epochs' : 5,
     'folder_result': '../results'
 }
 # use utils.keras_models classes:
